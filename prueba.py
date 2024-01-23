@@ -1,5 +1,6 @@
 import json
 import PySimpleGUI as sg
+from datetime import datetime
 
 def cargar_base_datos():
     try:
@@ -7,6 +8,19 @@ def cargar_base_datos():
             return json.load(archivo)
     except FileNotFoundError:
         return {}
+
+def cargar_historial():
+    try:
+        with open('historial.json', 'r') as archivo:
+            return json.load(archivo)
+    except FileNotFoundError:
+        return []
+
+def guardar_historial(entrega):
+    historial = cargar_historial()
+    historial.append(entrega)
+    with open('historial.json', 'w') as archivo:
+        json.dump(historial, archivo, indent=2)
 
 def guardar_base_datos(base_datos):
     with open('base_datos.json', 'w') as archivo:
@@ -49,6 +63,8 @@ def realizar_entrega_nueva_ventana():
     layout = [
         [sg.Text("Nombre del insumo:"), sg.InputText(key='-NOMBRE-')],
         [sg.Text("Cantidad:"), sg.InputText(key='-CANTIDAD-')],
+        [sg.Text("Destinatario:"), sg.InputText(key='-DESTINATARIO-')],
+        [sg.Text("Fecha (DD/MM/YYYY):"), sg.InputText(key='-FECHA-')],
         [sg.Button("Realizar entrega"), sg.Button("Cancelar")]
     ]
 
@@ -64,12 +80,20 @@ def realizar_entrega_nueva_ventana():
         if event == "Realizar entrega":
             nombre = values['-NOMBRE-']
             cantidad = values['-CANTIDAD-']
+            destinatario = values['-DESTINATARIO-']
+            fecha = values['-FECHA-']
 
-            if not validar_campos_vacios(values, ['-NOMBRE-', '-CANTIDAD-']):
+            if not validar_campos_vacios(values, ['-NOMBRE-', '-CANTIDAD-', '-DESTINATARIO-', '-FECHA-']):
+                continue
+
+            try:
+                fecha_entrega = datetime.strptime(fecha, '%d/%m/%Y')
+            except ValueError:
+                sg.popup_error("¡Error! El formato de fecha ingresado es incorrecto. Utilice DD/MM/YYYY.")
                 continue
 
             window.close()
-            return nombre, int(cantidad)
+            return nombre, int(cantidad), destinatario, fecha_entrega
 
 def agregar_insumo(window):
     nombre_cantidad = agregar_insumo_nueva_ventana()
@@ -87,16 +111,18 @@ def agregar_insumo(window):
         window['-OUTPUT-'].update(f"Insumo {nombre} agregado correctamente.")
 
 def realizar_entrega(window):
-    nombre_cantidad = realizar_entrega_nueva_ventana()
+    entrega_info = realizar_entrega_nueva_ventana()
 
-    if nombre_cantidad is not None:
-        nombre, cantidad = nombre_cantidad
+    if entrega_info is not None:
+        nombre, cantidad, destinatario, fecha_entrega = entrega_info
         base_datos = cargar_base_datos()
 
         if nombre in base_datos and base_datos[nombre] >= cantidad:
             base_datos[nombre] -= cantidad
             guardar_base_datos(base_datos)
-            window['-OUTPUT-'].update(f"Entrega de {cantidad} unidades de {nombre} realizada correctamente.")
+            entrega = {'Nombre': nombre, 'Cantidad': cantidad, 'Destinatario': destinatario, 'Fecha': fecha_entrega.strftime('%d/%m/%Y')}
+            guardar_historial(entrega)
+            window['-OUTPUT-'].update(f"Entrega de {cantidad} unidades de {nombre} a {destinatario} realizada el {fecha_entrega.strftime('%d/%m/%Y')} correctamente.")
         else:
             window['-OUTPUT-'].update(f"No hay suficientes unidades de {nombre} en el stock para realizar la entrega.")
 
@@ -108,6 +134,15 @@ def mostrar_stock(window):
     else:
         stock_actual = "\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos.items()])
         window['-OUTPUT-'].update(f"Stock actual:\n{stock_actual}")
+
+def mostrar_historial():
+    historial = cargar_historial()
+
+    if not historial:
+        sg.popup("El historial de entregas está vacío.")
+    else:
+        historial_texto = "\n".join([f"{entrega['Nombre']} - Cantidad: {entrega['Cantidad']}, Destinatario: {entrega['Destinatario']}, Fecha: {entrega['Fecha']}" for entrega in historial])
+        sg.popup_scrolled("Historial de Entregas", historial_texto)
 
 def buscar_insumo():
     layout = [
@@ -204,7 +239,7 @@ def main():
 
     layout = [
         [sg.Text("Sistema de Gestión de Stock y Entregas", font=("Helvetica", 16))],
-        [sg.Button("Agregar Insumo", size=(20, 2)), sg.Button("Realizar Entrega", size=(20, 2)), sg.Button("Mostrar Stock", size=(20, 2)), sg.Button("Buscar y Modificar", size=(20, 2))],
+        [sg.Button("Agregar Insumo", size=(20, 2)), sg.Button("Realizar Entrega", size=(20, 2)), sg.Button("Mostrar Stock", size=(20, 2)), sg.Button("Historial de Entregas", size=(20, 2)), sg.Button("Buscar y Modificar", size=(20, 2))],
         [sg.Text(size=(40, 5), key='-OUTPUT-')],
         [sg.Button("Salir", size=(20, 2))]
     ]
@@ -222,6 +257,8 @@ def main():
             realizar_entrega(window)
         elif event == "Mostrar Stock":
             mostrar_stock(window)
+        elif event == "Historial de Entregas":
+            mostrar_historial()
         elif event == "Buscar y Modificar":
             nombre = buscar_insumo()
             if nombre:

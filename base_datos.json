@@ -1,4 +1,7 @@
 {
-  "cables hdmi": 5,
-  "cables vga": 7
+  "cables hdmi": 4,
+  "cables vga": 2,
+  "cables de red": 5,
+  "parlantes": 2,
+  "camara": 4
 }

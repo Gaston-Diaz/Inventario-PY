@@ -1,0 +1,14 @@
+[
+  {
+    "Nombre": "cables hdmi",
+    "Cantidad": 2,
+    "Destinatario": "informatica",
+    "Fecha": "23/01/2024"
+  },
+  {
+    "Nombre": "cables vga",
+    "Cantidad": 4,
+    "Destinatario": "compras",
+    "Fecha": "23/01/2024"
+  }
+]
