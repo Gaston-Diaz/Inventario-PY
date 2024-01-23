@@ -65,7 +65,7 @@ def realizar_entrega_nueva_ventana():
         [sg.Text("Cantidad:"), sg.InputText(key='-CANTIDAD-')],
         [sg.Text("Destinatario:"), sg.InputText(key='-DESTINATARIO-')],
         [sg.Text("Fecha (DD/MM/YYYY):"), sg.InputText(key='-FECHA-')],
-        [sg.Button("Realizar entrega"), sg.Button("Cancelar")]
+        [sg.Button("Buscar Insumo"), sg.Button("Realizar entrega"), sg.Button("Cancelar")]
     ]
 
     window = sg.Window("Realizar Entrega", layout)
@@ -76,6 +76,41 @@ def realizar_entrega_nueva_ventana():
         if event == sg.WIN_CLOSED or event == "Cancelar":
             window.close()
             return None
+
+        if event == "Buscar Insumo":
+            nombre_buscado = values['-NOMBRE-']
+            base_datos = cargar_base_datos()
+
+            resultados_coincidentes = [insumo for insumo in base_datos.keys() if nombre_buscado.lower() in insumo.lower()]
+
+            if not resultados_coincidentes:
+                sg.popup_error(f"No se encontraron insumos que coincidan con: {nombre_buscado}")
+            else:
+                layout_resultados = [
+                    [sg.Text("Selecciona el insumo:")],
+                    [sg.Listbox(resultados_coincidentes, size=(30, len(resultados_coincidentes)), key='-LISTA-')],
+                    [sg.Button("Seleccionar")]
+                ]
+
+                sub_window_resultados = sg.Window("Resultados de la Búsqueda", layout_resultados)
+
+                while True:
+                    event_resultados, values_resultados = sub_window_resultados.read()
+
+                    if event_resultados == sg.WIN_CLOSED:
+                        sub_window_resultados.close()
+                        break
+
+                    if event_resultados == "Seleccionar":
+                        seleccion = values_resultados['-LISTA-']
+
+                        if not seleccion:
+                            sg.popup_error("¡Error! Debes seleccionar un insumo.")
+                            continue
+
+                        sub_window_resultados.close()
+                        window['-NOMBRE-'].update(seleccion[0])
+                        break
 
         if event == "Realizar entrega":
             nombre = values['-NOMBRE-']
