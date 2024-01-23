@@ -161,14 +161,33 @@ def realizar_entrega(window):
         else:
             window['-OUTPUT-'].update(f"No hay suficientes unidades de {nombre} en el stock para realizar la entrega.")
 
-def mostrar_stock(window):
+def mostrar_stock_nueva_ventana():
     base_datos = cargar_base_datos()
 
     if not base_datos:
-        window['-OUTPUT-'].update("La base de datos de stock está vacía.")
+        sg.popup("La base de datos de stock está vacía.")
     else:
-        stock_actual = "\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos.items()])
-        window['-OUTPUT-'].update(f"Stock actual:\n{stock_actual}")
+        layout = [
+            [sg.Text("Stock actual:")],
+            [sg.Multiline("\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos.items()]), size=(40, 10), key='-STOCK-')],
+            [sg.Button("Copiar"), sg.Button("Cerrar")]
+        ]
+
+        window_stock = sg.Window("Stock Actual", layout)
+
+        while True:
+            event_stock, values_stock = window_stock.read()
+
+            if event_stock == sg.WIN_CLOSED or event_stock == "Cerrar":
+                window_stock.close()
+                break
+
+            if event_stock == "Copiar":
+                sg.popup("¡Datos copiados al portapapeles!")
+                sg.clipboard_set("\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos.items()]))
+
+def mostrar_stock(window):
+    mostrar_stock_nueva_ventana()
 
 def mostrar_historial():
     historial = cargar_historial()
