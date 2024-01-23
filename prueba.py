@@ -161,42 +161,89 @@ def realizar_entrega(window):
         else:
             window['-OUTPUT-'].update(f"No hay suficientes unidades de {nombre} en el stock para realizar la entrega.")
 
-def mostrar_stock_nueva_ventana():
+def mostrar_stock_nueva_ventana(filtro_producto=None):
     base_datos = cargar_base_datos()
 
     if not base_datos:
         sg.popup("La base de datos de stock está vacía.")
     else:
-        layout = [
-            [sg.Text("Stock actual:")],
-            [sg.Multiline("\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos.items()]), size=(40, 10), key='-STOCK-')],
-            [sg.Button("Copiar"), sg.Button("Cerrar")]
-        ]
+        if filtro_producto:
+            # Usa una comprensión de lista para filtrar según el filtro de producto proporcionado
+            base_datos_filtrada = {insumo: cantidad for insumo, cantidad in base_datos.items() if filtro_producto.lower() in insumo.lower()}
+        else:
+            base_datos_filtrada = base_datos
 
-        window_stock = sg.Window("Stock Actual", layout)
+        if not base_datos_filtrada:
+            sg.popup(f"No hay insumos para el producto '{filtro_producto}'.")
+        else:
+            layout = [
+                [sg.Text("Stock actual:")],
+                [sg.Multiline("\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos_filtrada.items()]), size=(40, 10), key='-STOCK-')],
+                [sg.Button("Copiar"), sg.Button("Cerrar")]
+            ]
 
-        while True:
-            event_stock, values_stock = window_stock.read()
+            window_stock = sg.Window("Stock Actual", layout)
 
-            if event_stock == sg.WIN_CLOSED or event_stock == "Cerrar":
-                window_stock.close()
-                break
+            while True:
+                event_stock, values_stock = window_stock.read()
 
-            if event_stock == "Copiar":
-                sg.popup("¡Datos copiados al portapapeles!")
-                sg.clipboard_set("\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos.items()]))
+                if event_stock == sg.WIN_CLOSED or event_stock == "Cerrar":
+                    window_stock.close()
+                    break
 
-def mostrar_stock(window):
-    mostrar_stock_nueva_ventana()
+                if event_stock == "Copiar":
+                    sg.popup("¡Datos copiados al portapapeles!")
+                    sg.clipboard_set("\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos_filtrada.items()]))
 
-def mostrar_historial():
+def mostrar_historial_nueva_ventana(filtro_producto=None):
     historial = cargar_historial()
 
     if not historial:
         sg.popup("El historial de entregas está vacío.")
     else:
-        historial_texto = "\n".join([f"{entrega['Nombre']} - Cantidad: {entrega['Cantidad']}, Destinatario: {entrega['Destinatario']}, Fecha: {entrega['Fecha']}" for entrega in historial])
-        sg.popup_scrolled("Historial de Entregas", historial_texto)
+        if filtro_producto:
+            historial_filtrado = [entrega for entrega in historial if filtro_producto.lower() in entrega['Nombre'].lower()]
+        else:
+            historial_filtrado = historial
+
+        if not historial_filtrado:
+            sg.popup(f"No hay entregas para el producto '{filtro_producto}'.")
+        else:
+            layout = [
+                [sg.Text("Historial de Entregas:")],
+                [sg.Multiline("\n".join([f"{entrega['Nombre']} - Cantidad: {entrega['Cantidad']}, Destinatario: {entrega['Destinatario']}, Fecha: {entrega['Fecha']}" for entrega in historial_filtrado]), size=(60, 15), key='-HISTORIAL-')],
+                [sg.Button("Copiar"), sg.Button("Cerrar")]
+            ]
+
+            window_historial = sg.Window("Historial de Entregas", layout)
+
+            while True:
+                event_historial, values_historial = window_historial.read()
+
+                if event_historial == sg.WIN_CLOSED or event_historial == "Cerrar":
+                    window_historial.close()
+                    break
+
+                if event_historial == "Copiar":
+                    sg.popup("¡Datos copiados al portapapeles!")
+                    sg.clipboard_set("\n".join([f"{entrega['Nombre']} - Cantidad: {entrega['Cantidad']}, Destinatario: {entrega['Destinatario']}, Fecha: {entrega['Fecha']}" for entrega in historial_filtrado]))
+
+
+def mostrar_stock(window):
+    filtro_producto = sg.popup_get_text("Filtrar por producto (dejar en blanco para mostrar todo):", title="Filtrar Stock")
+    mostrar_stock_nueva_ventana(filtro_producto)
+
+def mostrar_historial():
+    filtro_producto = sg.popup_get_text("Filtrar por producto (dejar en blanco para mostrar todo):", title="Filtrar Historial")
+    mostrar_historial_nueva_ventana(filtro_producto)
+
+#    historial = cargar_historial()
+
+#    if not historial:
+#        sg.popup("El historial de entregas está vacío.")
+#    else:
+#        historial_texto = "\n".join([f"{entrega['Nombre']} - Cantidad: {entrega['Cantidad']}, Destinatario: {entrega['Destinatario']}, Fecha: {entrega['Fecha']}" for entrega in historial])
+#        sg.popup_scrolled("Historial de Entregas", historial_texto)
 
 def buscar_insumo():
     layout = [

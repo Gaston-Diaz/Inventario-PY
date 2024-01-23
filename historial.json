@@ -16,5 +16,11 @@
     "Cantidad": 2,
     "Destinatario": "informatica",
     "Fecha": "23/01/2024"
+  },
+  {
+    "Nombre": "toner1",
+    "Cantidad": 2,
+    "Destinatario": "personal",
+    "Fecha": "23/01/2024"
   }
 ]

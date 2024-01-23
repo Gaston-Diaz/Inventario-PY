@@ -3,5 +3,7 @@
   "cables vga": 0,
   "cables de red": 5,
   "parlantes": 2,
-  "camara": 4
+  "camara": 4,
+  "toner1": 8,
+  "toner2": 30
 }
