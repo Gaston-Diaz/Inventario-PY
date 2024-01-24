@@ -349,12 +349,13 @@ def main():
     sg.theme('DarkTeal7')  # Cambiar el tema para un aspecto más atractivo
     layout = [
         [sg.Text("Sistema de Gestión de Stock y Entregas", font=("Helvetica", 16))],
+        [sg.Image(filename='download2.png')],
         [sg.Button("Agregar Insumo", size=(20, 2)), sg.Button("Realizar Entrega", size=(20, 2)), sg.Button("Mostrar Stock", size=(20, 2)), sg.Button("Historial de Entregas", size=(20, 2)), sg.Button("Buscar y Modificar", size=(20, 2))],
         [sg.Text(size=(40, 5), key='-OUTPUT-')],
         [sg.Button("Salir", size=(20, 2), button_color=('white', 'red'))]
     ]
 
-    window = sg.Window("Menú Principal", layout, element_justification='center')
+    window = sg.Window("Menú Principal", layout, element_justification='center',size=(1200, 800))
 
     while True:
         event, values = window.read()
