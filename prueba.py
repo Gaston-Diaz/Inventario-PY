@@ -37,7 +37,8 @@ def agregar_insumo_nueva_ventana():
     layout = [
         [sg.Text("Nombre del insumo:"), sg.InputText(key='-NOMBRE-')],
         [sg.Text("Cantidad:"), sg.InputText(key='-CANTIDAD-')],
-        [sg.Button("Agregar insumo"), sg.Button("Cancelar")]
+        [sg.Text(size=(40, 5), key='-OUTPUT-')],
+        [sg.Button("Agregar insumo"), sg.Button("Cancelar",button_color=('white', 'red'))],
     ]
 
     window = sg.Window("Agregar Insumo", layout)
@@ -61,11 +62,14 @@ def agregar_insumo_nueva_ventana():
 
 def realizar_entrega_nueva_ventana():
     layout = [
-        [sg.Text("Nombre del insumo:"), sg.InputText(key='-NOMBRE-')],
-        [sg.Text("Cantidad:"), sg.InputText(key='-CANTIDAD-')],
-        [sg.Text("Destinatario:"), sg.InputText(key='-DESTINATARIO-')],
-        [sg.Text("Fecha (DD/MM/YYYY):"), sg.InputText(key='-FECHA-')],
-        [sg.Button("Buscar Insumo"), sg.Button("Realizar entrega"), sg.Button("Cancelar")]
+        [sg.Column([
+                    [sg.Text("Nombre del insumo:"), sg.InputText(key='-NOMBRE-')],
+                    [sg.Text("Cantidad:"), sg.InputText(key='-CANTIDAD-')],
+                    [sg.Text("Destinatario:"), sg.InputText(key='-DESTINATARIO-')],
+                    [sg.Text("Fecha (DD/MM/YYYY):"), sg.InputText(key='-FECHA-')],
+                    ], vertical_alignment='center')],
+        [sg.Text(size=(40, 5), key='-OUTPUT-')],
+        [sg.Button("Buscar Insumo"), sg.Button("Realizar entrega"), sg.Button("Cancelar", button_color=('white', 'red'))],
     ]
 
     window = sg.Window("Realizar Entrega", layout)
@@ -88,7 +92,8 @@ def realizar_entrega_nueva_ventana():
             else:
                 layout_resultados = [
                     [sg.Text("Selecciona el insumo:")],
-                    [sg.Listbox(resultados_coincidentes, size=(30, len(resultados_coincidentes)), key='-LISTA-')],
+                    [sg.Listbox(resultados_coincidentes, size=(50, len(resultados_coincidentes)) ,key='-LISTA-')], #
+                    [sg.Text(size=(40, 5), key='-OUTPUT-')],
                     [sg.Button("Seleccionar")]
                 ]
 
@@ -179,7 +184,8 @@ def mostrar_stock_nueva_ventana(filtro_producto=None):
             layout = [
                 [sg.Text("Stock actual:")],
                 [sg.Multiline("\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos_filtrada.items()]), size=(40, 10), key='-STOCK-')],
-                [sg.Button("Copiar"), sg.Button("Cerrar")]
+                [sg.Text(size=(40, 5), key='-OUTPUT-')],
+                [sg.Button("Copiar"), sg.Button("Cerrar",button_color=('white', 'red'))]
             ]
 
             window_stock = sg.Window("Stock Actual", layout)
@@ -212,7 +218,8 @@ def mostrar_historial_nueva_ventana(filtro_producto=None):
             layout = [
                 [sg.Text("Historial de Entregas:")],
                 [sg.Multiline("\n".join([f"{entrega['Nombre']} - Cantidad: {entrega['Cantidad']}, Destinatario: {entrega['Destinatario']}, Fecha: {entrega['Fecha']}" for entrega in historial_filtrado]), size=(60, 15), key='-HISTORIAL-')],
-                [sg.Button("Copiar"), sg.Button("Cerrar")]
+                [sg.Text(size=(40, 5), key='-OUTPUT-')],
+                [sg.Button("Copiar"), sg.Button("Cerrar", button_color=('white', 'red'))]
             ]
 
             window_historial = sg.Window("Historial de Entregas", layout)
@@ -248,7 +255,8 @@ def mostrar_historial():
 def buscar_insumo():
     layout = [
         [sg.Text("Nombre del insumo:"), sg.InputText(key='-BUSCAR-NOMBRE-')],
-        [sg.Button("Buscar"), sg.Button("Cancelar")]
+        [sg.Text(size=(40, 5), key='-OUTPUT-')],
+        [sg.Button("Buscar"), sg.Button("Cancelar", button_color=('white', 'red'))] 
     ]
 
     window = sg.Window("Buscar Insumo", layout)
@@ -281,8 +289,9 @@ def modificar_insumo(window, values):
 
     layout = [
         [sg.Text("Selecciona el insumo a modificar:")],
-        [sg.Listbox(resultados_coincidentes, size=(30, len(resultados_coincidentes)), key='-LISTA-')],
-        [sg.Button("Seleccionar"), sg.Button("Cancelar")]
+        [sg.Listbox(resultados_coincidentes, size=(50, len(resultados_coincidentes)), key='-LISTA-')], #len(resultados_coincidentes)
+        [sg.Text(size=(40, 5), key='-OUTPUT-')],
+        [sg.Button("Seleccionar"), sg.Button("Cancelar", button_color=('white', 'red'))]
     ]
 
     sub_window = sg.Window("Resultados de la Búsqueda", layout)
@@ -309,7 +318,8 @@ def modificar_cantidad_insumo(window, base_datos, insumo_seleccionado):
     layout = [
         [sg.Text(f"Modificar insumo: {insumo_seleccionado}")],
         [sg.Text("Nueva cantidad:"), sg.InputText(key='-NUEVA-CANTIDAD-')],
-        [sg.Button("Guardar"), sg.Button("Cancelar")]
+        [sg.Text(size=(40, 5), key='-OUTPUT-')],
+        [sg.Button("Guardar"), sg.Button("Cancelar", button_color=('white', 'red'))]
     ]
 
     sub_window = sg.Window("Modificar Insumo", layout)
@@ -336,16 +346,15 @@ def modificar_cantidad_insumo(window, base_datos, insumo_seleccionado):
     sub_window.close()
 
 def main():
-    sg.theme('DarkGrey1')  # Cambiar el tema para un aspecto más atractivo
-
+    sg.theme('DarkTeal7')  # Cambiar el tema para un aspecto más atractivo
     layout = [
         [sg.Text("Sistema de Gestión de Stock y Entregas", font=("Helvetica", 16))],
         [sg.Button("Agregar Insumo", size=(20, 2)), sg.Button("Realizar Entrega", size=(20, 2)), sg.Button("Mostrar Stock", size=(20, 2)), sg.Button("Historial de Entregas", size=(20, 2)), sg.Button("Buscar y Modificar", size=(20, 2))],
         [sg.Text(size=(40, 5), key='-OUTPUT-')],
-        [sg.Button("Salir", size=(20, 2))]
+        [sg.Button("Salir", size=(20, 2), button_color=('white', 'red'))]
     ]
 
-    window = sg.Window("Menú Principal", layout)
+    window = sg.Window("Menú Principal", layout, element_justification='center')
 
     while True:
         event, values = window.read()
