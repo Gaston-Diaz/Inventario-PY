@@ -348,12 +348,23 @@ def modificar_cantidad_insumo(window, base_datos, insumo_seleccionado):
 def main():
     sg.theme('DarkTeal7')  # Cambiar el tema para un aspecto más atractivo
     layout = [
-        [sg.Text("Sistema de Gestión de Stock y Entregas", font=("Helvetica", 16))],
+        [sg.Text("Sistema de Gestión de Stock y Entregas", font=("Helvetica", 20))],
         [sg.Image(filename='download2.png')],
-        #[sg.Button("Agregar Insumo", size=(20, 2)), sg.Button("Realizar Entrega", size=(20, 2)), sg.Button("Mostrar Stock", size=(20, 2)), sg.Button("Historial de Entregas", size=(20, 2)), sg.Button("Buscar y Modificar", size=(20, 2))],
-        [sg.Button(image_filename='C:/Users/Usuario/Desktop/Inv-Py/icons/agregarICO.png', image_size=(60, 60), border_width=0, key="Agregar Insumo"),
-         sg.Text("Agregar Insumo", size=(30, 1))],
+        [
+            sg.Button(image_filename='C:/Users/Usuario/Desktop/Inv-Py/icons/agregarICO.png', image_size=(60, 60), border_width=0, key="Agregar Insumo"),
+            sg.Text("Agregar Insumo", size=(17, 1)),
+            sg.Button(image_filename='C:/Users/Usuario/Desktop/Inv-Py/icons/icoEntrega.png', image_size=(60, 60), border_width=0, key="Realizar Entrega"),
+            sg.Text("Realizar Entrega", size=(17, 1)),
+            sg.Button(image_filename='C:/Users/Usuario/Desktop/Inv-Py/icons/icoStock.png', image_size=(60, 60), border_width=0, key="Mostrar Stock"),
+            sg.Text("Mostrar Stock", size=(17, 1)),
+            sg.Button(image_filename='C:/Users/Usuario/Desktop/Inv-Py/icons/historial.png', image_size=(60, 60), border_width=0, key="Historial de Entregas"),
+            sg.Text("Historial de Entregas", size=(17, 1)),
+            sg.Button(image_filename='C:/Users/Usuario/Desktop/Inv-Py/icons/icoEditar.png', image_size=(60, 60), border_width=0, key="Buscar y Modificar"),
+            sg.Text("Buscar y Modificar", size=(17, 1)),
+        ],
+
         [sg.Text(size=(40, 5), key='-OUTPUT-')],
+
         [sg.Button("Salir", size=(20, 2), button_color=('white', 'red'))],
 
         #[sg.Button(image_filename='C:/Users/Usuario/Desktop/Inv-Py/icoEntrega.png', image_size=(60, 60), border_width=0),
