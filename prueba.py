@@ -349,7 +349,7 @@ def main():
     sg.theme('DarkTeal7')  # Cambiar el tema para un aspecto más atractivo
     layout = [
         [sg.Text("Sistema de Gestión de Stock y Entregas", font=("Helvetica", 20))],
-        [sg.Image(filename='download2.png')],
+        [sg.Image(filename='C:/Users/Usuario/Desktop/Inv-Py/download2.png')],
         [
             sg.Button(image_filename='C:/Users/Usuario/Desktop/Inv-Py/icons/agregarICO.png', image_size=(60, 60), border_width=0, key="Agregar Insumo"),
             sg.Text("Agregar Insumo", size=(17, 1)),
