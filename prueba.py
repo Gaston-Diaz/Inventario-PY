@@ -378,7 +378,7 @@ def main():
         # sg.Text("texto_boton", size=(30, 1))],
     ]
 
-    window = sg.Window("Menú Principal", layout, element_justification='center',size=(1200, 800))
+    window = sg.Window("Menú Principal", layout, element_justification='center',size=(1200, 700))
 
     while True:
         event, values = window.read()
