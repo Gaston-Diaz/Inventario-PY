@@ -1,32 +1,8 @@
 [
   {
-    "Nombre": "cables hdmi",
-    "Cantidad": 2,
-    "Destinatario": "informatica",
-    "Fecha": "23/01/2024"
-  },
-  {
-    "Nombre": "cables vga",
-    "Cantidad": 4,
-    "Destinatario": "compras",
-    "Fecha": "23/01/2024"
-  },
-  {
-    "Nombre": "cables vga",
-    "Cantidad": 2,
-    "Destinatario": "informatica",
-    "Fecha": "23/01/2024"
-  },
-  {
-    "Nombre": "toner1",
-    "Cantidad": 2,
-    "Destinatario": "personal",
-    "Fecha": "23/01/2024"
-  },
-  {
-    "Nombre": "cables hdmi",
-    "Cantidad": 4,
-    "Destinatario": "diego",
-    "Fecha": "26/01/2024"
+    "Nombre": "GENIUS-PARLANTE USB",
+    "Cantidad": 1,
+    "Destinatario": "Veronica Mancuso",
+    "Fecha": "25/01/2024"
   }
 ]
