@@ -9,6 +9,28 @@ icoEditar = b'iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEw
 icoEntrega = b'iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAACXBIWXMAAAsTAAALEwEAmpwYAAAElklEQVR4nO2ae4hVVRTGf5qlohkJFimiGT0sES0kGC0iEHwUUmnkgywwFNEMpLJSS0iJSvARNvTQCat/EitmVJQS1D+yB0iIjxEVJU3s4YQlPUbnyIrvyOZyzr373rnn3nNnzgebYe7Zr+/sddZe69sbMmQoFYOBj4FDwLEylg0543QHvnKe23gfAQOpIK4HTgFBAqU1Z6zrgD8i6p0Arq0U4ac16G7gDmBIGcqtMYRD0mG9ocBe1Z1WKcLLNODSMvbZLQ/hXCxX3ZfpJIRfV91XSCHhAcBNnYVwF+BX4HRnIXyV6l306DMjnAfZCqfVpO3/h4DPgd+ATcAE/d6hTPoSsELOKyq6+knPOwzhwCkWCz8PDAMWAc0FQsuaImw4CvwJrAdGE7113Qc0AH8BB6lxwj2V8figh+rXNOEkkBFOGtkKd3STXlrpfLTahAcDqyutK1WTcLWREe7oqPgKdwEeBOqBrcp6FgP900R4pETu/RHi9xFgBzDJY7AxwHcxWc+/wNtAH6pMeI5y0kIiuAX6cbhFKxnWPa0BxwGPAZ8qDbRnZ6Rdd60G4TGaSBuwDqiLEMFv06RHxZwyrNTqBcpoXgV6xVjRHuelfAvcW2ayJhRsdFLNNyXOX0GTHr5VZMdXA89KmQiT+A0e36l931OV1Ad60Q2eUm2hfidH5M8B8J+s+H+06EcLFnwxIafjnVq9YtBLpve3+jgPvABcQ/G43zlesXIYmAc8LMfZpgUxa75SyRfznTbNno4sH4ZIw3L7nOjZ9i6g0Wl7RitpZu0iPHppLIVwg+qvlVmXC2OBA858mnQqEYV+wIeOozXrWBLjN1A/gUT/kgnPpPywF/ic85mdzXU4whvONrdGLyAf+qeVcIgbgO0a50DEd21b4Gv664OV6mtLWgmH+tVxjTW9HX2843jqujQTNizQWJ+U0PZ2YJ/a/wNMCR8kTTjXYxaD8RprV5HtnpT0Gygsvtt9mCThB2RKexWk3FjkxCe724kHeutCS8hpY9Q9jyQJj3I8bnhqsA2YockVQhgFvuhRd4QCjjC8fSquYtImbcL548CXTrxt5YK+zYkR+3lXxePhHmteOx/mORHbj7pIE4tKOq2+wGzd7mlzxrb98QOZveXN3zvxucXdcbDEZbPTzzp55rwIquSlB+mwbH9MKvoL8Gie9rbFnFTdFmVzXghSsC0N14lhvdTOGXnCRDP3l+QPbB7fFJn4kAbCvugnpxemlatLya6CGiFsGtnPjrnbHl0SgpQT7qa4+ZKTe7dLDAxSTHigIwm1irjdGiANhHvozZvUUg48ApzTWCdjbgdUlfAOJ1BvVnpXr63nCYl1PqGl3Yx915nXF9q/SRvhZZJYggLlgnLcJqkmCxXszxLR350XN7+MFlMy4TA4t0nGhZJ3SuibKzX0M+AHR+EsVL6WXpUIWjTIzZ71d6u+KYKloI8CjUnKd1cprFwv1dKuKyWKRhEwGaQQ7pG3bPXQkVKLOql/Frm8J+029+RhmMwzNEmTTWoazzixaaGy1ScjqQUMB95XPpl7enhYRKcneACWIQPtx2VPLkCT6dGE1QAAAABJRU5ErkJggg=='
 icoStock = b'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAABL0lEQVR4nO2YUQ6EIAxE5/7HWsO5Zv82WQSliBXLvKQfkqWWoa2wgBBCCCGEEEckADTahkCw08LAbEHW59dDCYDiDtdSno49I3n0IWYL3Aov+zzUM1z6EI3OPEumNlcCYMIM4EnPCCvA1tgzwgrQ+/ueE+gtXwQ+JMCoxZuzITm/0JrGo8areCs+rQC9ziUAlAEYUTKvLwFGFIANwedj1ufW8atCVilNKJ3mSqc6DwEssRz5qWKecDL/bKeG7VxjPOMn3HQXCCPAGdaatiIB8JIMyFkuA3IkAJQBcCmB1NCJo9nfP0Rc1IbX2luQAKhkABezpttVVCvdGn/kCu0Uu8j0/jl7gHf75+wB3u2fswc42n+aoCl5m06CRykTnd16KQGwpP3QSVAIIYQQQmAtvhYQMe5z65YuAAAAAElFTkSuQmCC'
 
+def pantalla_carga():
+    layout = [
+            [sg.Text("Sistema de Gestion de Inventario", size=(30, 2), justification='center')],        
+            [sg.Text("Cargando datos, por favor espera...", size=(30, 1), justification='center')],
+            [sg.ProgressBar(100, orientation='h', size=(30, 20), key='progressbar')],
+            [sg.Cancel()]
+            ]
+
+    window = sg.Window('Cargando...', layout, finalize=True, element_justification='center')
+    progress_bar = window['progressbar']
+
+    for i in range(30):
+        event, values = window.read(timeout=30)
+
+        if event == sg.WIN_CLOSED or event == 'Cancel':
+            break
+
+        progress_bar.update_bar(i + 1)
+
+    window.close()
+
+
 def cargar_base_datos():
     try:
         with open('base_datos.json', 'r') as archivo:
@@ -384,6 +406,8 @@ def main():
     ]
 
     window = sg.Window("Menú Principal", layout, element_justification='center',size=(1200, 700))
+
+    pantalla_carga()
 
     while True:
         event, values = window.read()
