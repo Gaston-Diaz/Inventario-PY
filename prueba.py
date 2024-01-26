@@ -122,7 +122,7 @@ def realizar_entrega_nueva_ventana():
             else:
                 layout_resultados = [
                     [sg.Text("Selecciona el insumo:")],
-                    [sg.Listbox(resultados_coincidentes, size=(90, 30) ,key='-LISTA-')], #
+                    [sg.Listbox(resultados_coincidentes, size=(90, 20) ,key='-LISTA-')], #
                     [sg.Text(size=(40, 5), key='-OUTPUT-')],
                     [sg.Button("Seleccionar")]
                 ]
@@ -217,7 +217,7 @@ def mostrar_stock_nueva_ventana(filtro_producto=None):
         else:
             layout = [
                 [sg.Text("Stock actual:")],
-                [sg.Multiline("\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos_filtrada.items()]), size=(90, 30), key='-STOCK-')],
+                [sg.Multiline("\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos_filtrada.items()]), size=(90, 20), key='-STOCK-')],
                 [sg.Text(size=(40, 5), key='-OUTPUT-')],
                 [sg.Button("Copiar"), sg.Button("Cerrar",button_color=('white', 'red'))]
             ]
@@ -251,7 +251,7 @@ def mostrar_historial_nueva_ventana(filtro_producto=None):
         else:
             layout = [
                 [sg.Text("Historial de Entregas:")],
-                [sg.Multiline("\n".join([f"{entrega['Nombre']} - Cantidad: {entrega['Cantidad']}, Destinatario: {entrega['Destinatario']}, Fecha: {entrega['Fecha']}" for entrega in historial_filtrado]), size=(90, 30), key='-HISTORIAL-')],
+                [sg.Multiline("\n".join([f"{entrega['Nombre']} - Cantidad: {entrega['Cantidad']}, Destinatario: {entrega['Destinatario']}, Fecha: {entrega['Fecha']}" for entrega in historial_filtrado]), size=(90, 20), key='-HISTORIAL-')],
                 [sg.Text(size=(40, 5), key='-OUTPUT-')],
                 [sg.Button("Copiar"), sg.Button("Cerrar", button_color=('white', 'red'))]
             ]
@@ -323,7 +323,7 @@ def modificar_insumo(window, values):
 
     layout = [
         [sg.Text("Selecciona el insumo a modificar:")],
-        [sg.Listbox(resultados_coincidentes, size=(90,30), key='-LISTA-')], #len(resultados_coincidentes)
+        [sg.Listbox(resultados_coincidentes, size=(90,20), key='-LISTA-')], #len(resultados_coincidentes)
         [sg.Text(size=(40, 5), key='-OUTPUT-')],
         [sg.Button("Seleccionar"), sg.Button("Cancelar", button_color=('white', 'red'))]
     ]
