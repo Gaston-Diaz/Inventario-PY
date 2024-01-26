@@ -74,6 +74,7 @@ def realizar_entrega_nueva_ventana():
                     [sg.Text("Cantidad:"), sg.InputText(key='-CANTIDAD-')],
                     [sg.Text("Destinatario:"), sg.InputText(key='-DESTINATARIO-')],
                     [sg.Text("Fecha (DD/MM/YYYY):"), sg.InputText(key='-FECHA-')],
+                    [sg.Checkbox("Fecha Actual", key='-FECHA-ACTUAL-', enable_events=True)]
                     ], vertical_alignment='center')],
         [sg.Text(size=(40, 5), key='-OUTPUT-')],
         [sg.Button("Buscar Insumo"), sg.Button("Realizar entrega"), sg.Button("Cancelar", button_color=('white', 'red'))],
@@ -123,6 +124,10 @@ def realizar_entrega_nueva_ventana():
                         sub_window_resultados.close()
                         window['-NOMBRE-'].update(seleccion[0])
                         break
+
+        if values['-FECHA-ACTUAL-']:
+            fecha_actual = datetime.now().strftime('%d/%m/%Y')
+            window['-FECHA-'].update(fecha_actual)
 
         if event == "Realizar entrega":
             nombre = values['-NOMBRE-']
