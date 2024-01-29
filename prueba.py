@@ -230,7 +230,7 @@ def mostrar_stock_nueva_ventana(filtro_producto=None):
             multiline_elem = window_stock['-STOCK-']
 
             for insumo, cantidad in base_datos_filtrada.items():
-                color = 'red' if cantidad == 0 else 'RoyalBlue2' if cantidad == 1 else 'black'
+                color = 'red' if cantidad == 0 else 'DarkGoldenrod4' if cantidad == 1 else 'black' #RoyalBlue2
                 font = ('font_bold', 13) if cantidad == 0 else ('Arial', 13)
                 multiline_elem.print(f"{insumo}: {cantidad}", text_color=color, font=font)
 
