@@ -217,12 +217,22 @@ def mostrar_stock_nueva_ventana(filtro_producto=None):
         else:
             layout = [
                 [sg.Text("Stock actual:")],
-                [sg.Multiline("\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos_filtrada.items()]), size=(90, 20), key='-STOCK-')],
+                #[sg.Multiline("\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos_filtrada.items()]), size=(90, 20), key='-STOCK-')],
+                [sg.Multiline("", size=(90, 20), key='-STOCK-', font=('Arial', 12))],  # Se inicializa vacío para ser llenado en el bucle
                 [sg.Text(size=(40, 5), key='-OUTPUT-')],
                 [sg.Button("Copiar"), sg.Button("Cerrar",button_color=('white', 'red'))]
             ]
 
-            window_stock = sg.Window("Stock Actual", layout)
+            #window_stock = sg.Window("Stock Actual", layout)
+
+            window_stock = sg.Window("Stock Actual", layout, finalize=True)
+
+            multiline_elem = window_stock['-STOCK-']
+
+            for insumo, cantidad in base_datos_filtrada.items():
+                color = 'red' if cantidad == 0 else 'RoyalBlue2' if cantidad == 1 else 'black'
+                font = ('font_bold', 13) if cantidad == 0 else ('Arial', 13)
+                multiline_elem.print(f"{insumo}: {cantidad}", text_color=color, font=font)
 
             while True:
                 event_stock, values_stock = window_stock.read()
