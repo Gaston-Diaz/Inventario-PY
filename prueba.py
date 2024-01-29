@@ -359,11 +359,14 @@ def modificar_insumo(window, values):
             modificar_cantidad_insumo(window, base_datos, insumo_seleccionado)
 
 def modificar_cantidad_insumo(window, base_datos, insumo_seleccionado):
+    nombre_original = insumo_seleccionado
     layout = [
-        [sg.Text(f"Modificar insumo: {insumo_seleccionado}")],
-        [sg.Text("Nueva cantidad:"), sg.InputText(key='-NUEVA-CANTIDAD-')],
+        [sg.Text(f"Modificar insumo: {nombre_original}")],
+        [sg.Text("Nuevo nombre:"), sg.InputText(default_text=nombre_original, key='-NUEVO-NOMBRE-')],
+        [sg.Text("Nueva cantidad:"), sg.InputText(default_text=base_datos[nombre_original], key='-NUEVA-CANTIDAD-')],
+        [sg.Checkbox('Sumar a la cantidad existente', key='-SUMAR-ACTUAL-', default=False)],
         [sg.Text(size=(40, 5), key='-OUTPUT-')],
-        [sg.Button("Guardar"), sg.Button("Cancelar", button_color=('white', 'red'))]
+        [sg.Button("Guardar"), sg.Button("Cancelar", button_color=('white', 'red')), sg.Button("Borrar", button_color=('red', 'black'))]
     ]
 
     sub_window = sg.Window("Modificar Insumo", layout)
@@ -374,21 +377,72 @@ def modificar_cantidad_insumo(window, base_datos, insumo_seleccionado):
         if event == sg.WIN_CLOSED or event == "Cancelar":
             sub_window.close()
             return
-
+        
         if event == "Guardar":
-            if values['-NUEVA-CANTIDAD-'] == '':
-                sg.popup_error("¡Error! El campo 'Nueva cantidad' no puede estar vacío.")
+            nuevo_nombre = values['-NUEVO-NOMBRE-']
+            nueva_cantidad = values.get('-NUEVA-CANTIDAD-', '')
+
+            if not nuevo_nombre or not nueva_cantidad:
+                sg.popup_error("¡Error! El nombre y la cantidad no pueden estar vacíos.")
                 continue
 
-            nueva_cantidad = int(values['-NUEVA-CANTIDAD-'])
-            base_datos[insumo_seleccionado] = nueva_cantidad
+            try:
+                nueva_cantidad = int(nueva_cantidad)
+            except ValueError:
+                sg.popup_error("¡Error! La nueva cantidad debe ser un número entero.")
+                continue
+
+            if values['-SUMAR-ACTUAL-']:
+                base_datos[nombre_original] += nueva_cantidad
+            else:
+                base_datos[nombre_original] = nueva_cantidad
+
+            # Borrar el insumo original si el nombre cambió
+            if nombre_original != nuevo_nombre:
+                del base_datos[nombre_original]
+                base_datos[nuevo_nombre] = base_datos.get(nuevo_nombre, 0) + nueva_cantidad
+
+            # Actualizar la interfaz y guardar los cambios
             guardar_base_datos(base_datos)
-            window['-OUTPUT-'].update(f"Insumo {insumo_seleccionado} modificado correctamente.")
+            window['-OUTPUT-'].update(f"Insumo {nombre_original} modificado a {nuevo_nombre} correctamente. Nueva cantidad: {base_datos[nuevo_nombre]}.")
             sub_window.close()
             return
+        
+        if event == "Borrar":
+            confirmar_borrado = sg.popup_yes_no(f"¿Estás seguro de que deseas borrar el insumo '{nombre_original}'?")
+            if confirmar_borrado == 'Yes':
+                del base_datos[nombre_original]
+                guardar_base_datos(base_datos)
+                window['-OUTPUT-'].update(f"Insumo {nombre_original} borrado correctamente.")
+                sub_window.close()
+                return
+"""    
+        if event == "Guardar":
+            nuevo_nombre = values['-NUEVO-NOMBRE-']
+            nueva_cantidad = values.get('-NUEVA-CANTIDAD-')
 
-    sub_window.close()
+            if not nuevo_nombre or not nueva_cantidad:
+                sg.popup_error("¡Error! El nombre y la cantidad no pueden estar vacíos.")
+                continue
 
+            try:
+                nueva_cantidad = int(nueva_cantidad)
+            except ValueError:
+                sg.popup_error("¡Error! La nueva cantidad debe ser un número entero.")
+                continue
+
+            # Borrar el insumo original
+            del base_datos[nombre_original]
+
+            # Agregar el insumo modificado
+            base_datos[nuevo_nombre] = nueva_cantidad
+
+            # Actualizar la interfaz y guardar los cambios
+            guardar_base_datos(base_datos)
+            window['-OUTPUT-'].update(f"Insumo {nombre_original} modificado a {nuevo_nombre} correctamente. Nueva cantidad: {nueva_cantidad}.")
+            sub_window.close()
+            return
+"""
 def main():
     sg.theme('DarkTeal7')  # Cambiar el tema para un aspecto más atractivo
     layout = [
@@ -404,7 +458,7 @@ def main():
             sg.Button('',image_data=historial, image_size=(60, 60), border_width=0, key="Historial de Entregas"),
             sg.Text("Historial de Entregas", size=(17, 1)),
             sg.Button('',image_data=icoEditar, image_size=(60, 60), border_width=0, key="Buscar y Modificar"),
-            sg.Text("Buscar y Modificar", size=(17, 1)),
+            sg.Text("Modificar, Borrar Stock", size=(17, 1)),
         ],
 
         [sg.Text(size=(40, 5), key='-OUTPUT-')],
