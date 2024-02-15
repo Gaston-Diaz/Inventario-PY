@@ -261,7 +261,7 @@ def mostrar_historial_nueva_ventana(filtro_producto=None):
         else:
             layout = [
                 [sg.Text("Historial de Entregas:")],
-                [sg.Multiline("\n".join([f"{entrega['Nombre']} - Cantidad: {entrega['Cantidad']}, Destinatario: {entrega['Destinatario']}, Fecha: {entrega['Fecha']}" for entrega in historial_filtrado]), size=(90, 20), key='-HISTORIAL-')],
+                [sg.Multiline("\n".join([f"{entrega['Nombre']} - Cantidad: {entrega['Cantidad']}, Destinatario: {entrega['Destinatario']}, Fecha: {entrega['Fecha']}" for entrega in historial_filtrado]), size=(120, 20), key='-HISTORIAL-')],
                 [sg.Text(size=(40, 5), key='-OUTPUT-')],
                 [sg.Button("Copiar"), sg.Button("Cerrar", button_color=('white', 'red'))]
             ]
