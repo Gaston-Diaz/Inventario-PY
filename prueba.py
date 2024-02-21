@@ -1,5 +1,7 @@
 import json
+import os
 import PySimpleGUI as sg
+import openpyxl
 from datetime import datetime
 
 agregarICO = b'iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACLUlEQVR4nO2ZwU4UQRCGv+CCiciLKPHkRbgZ5YBRQ7K+hQHBB+AE6skTTwCcwUfRiLsh6g25KmKie6BNJf+Qdpyd7WGHnV7tL6lkd7s7Xf9WVU/3NCQSiVCmgFfAF8AFmPVbIkJeBgrwrQfcJjKO5NxcYP/X6t8FrhERThbKVeCdxmwxxkKMW8DPC6TksHYEvFBd1yLEeOil5ahts04hTTDvRWashZT6+88JOW4o36vYcYiQcbO/yBruED9z/1WNjAsuCYkMlyISGS5FJDJcikhkuBSRyHApIpHhYo7IJNAGdoAOcAr8AD4Bu8AToBW7kMfAYcBB6jPwIEYhE3pHlc3/HngG3ASmZfZ5FTiockIcNZmIX8BT4EpJX2tb1jvnqIRYOp1JxL2C9jfAfsHv9z0xlmaNCpn0asIiUUSZTytezbRCB10Gba8m+qWTK/HJnP+g9nbooMtgV/PZP9sPN8CnNbVvVxlUN13Nd6Okjxvg06zaP1YZVDcnmm/GK2wXaNkCMKPvp00K+ZYTYs6FCtnLCTlpUkhH89nDbtjU6lYZVDc7ms+e2P1wA3x6XlTs2a2TXaKMgiXNdzDE8tspWn79/c6obfkCQlbVdqiH6zlTEtPEfWBP2448+15h+yxojG1vHhEJ656Ylfx2I0dLkeiVXYY2yYb+XaeaWdOKdF02q8LOtiRnEmFHgOi4q5PgoDS0mogmnfphq9eilua3wFfguyJhS6ytTn8UdsZvcIb6yptP4cwAAAAASUVORK5CYII='
@@ -200,6 +202,28 @@ def realizar_entrega(window):
         else:
             window['-OUTPUT-'].update(f"No hay suficientes unidades de {nombre} en el stock para realizar la entrega.")
 
+def guardar_en_excel_1(base_datos):
+    # Crear un nuevo libro de Excel
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+
+    # Escribir los encabezados
+    sheet.append(['Insumo', 'Cantidad'])
+
+    # Escribir los datos de la base de datos en el libro de Excel
+    for insumo, cantidad in base_datos.items():
+        sheet.append([insumo, cantidad])
+
+    # Crear la carpeta si no existe
+    folder_path = 'Stock_excel'
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
+    # Guardar el libro de Excel en la carpeta especificada
+    excel_file_path = os.path.join(folder_path, 'Stock.xlsx')
+    workbook.save(excel_file_path)
+    return excel_file_path
+
 def mostrar_stock_nueva_ventana(filtro_producto=None):
     base_datos = cargar_base_datos()
 
@@ -220,7 +244,7 @@ def mostrar_stock_nueva_ventana(filtro_producto=None):
                 #[sg.Multiline("\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos_filtrada.items()]), size=(90, 20), key='-STOCK-')],
                 [sg.Multiline("", size=(90, 20), key='-STOCK-', font=('Arial', 12))],  # Se inicializa vacío para ser llenado en el bucle
                 [sg.Text(size=(40, 5), key='-OUTPUT-')],
-                [sg.Button("Copiar"), sg.Button("Cerrar",button_color=('white', 'red'))]
+                [sg.Button("Copiar"),sg.Button("EXCEL") ,sg.Button("Cerrar",button_color=('white', 'red'))]
             ]
 
             #window_stock = sg.Window("Stock Actual", layout)
@@ -244,6 +268,34 @@ def mostrar_stock_nueva_ventana(filtro_producto=None):
                 if event_stock == "Copiar":
                     sg.popup("¡Datos copiados al portapapeles!")
                     sg.clipboard_set("\n".join([f"{insumo}: {cantidad}" for insumo, cantidad in base_datos_filtrada.items()]))
+                
+                if event_stock == "EXCEL":
+                    excel_file_path = guardar_en_excel_1(base_datos_filtrada)
+                    sg.popup(f"Archivo guardado en {excel_file_path}")
+
+def guardar_en_excel(historial):
+    # Crear una carpeta si no existe
+    if not os.path.exists('Historial_Entregas_excel'):
+        os.makedirs('Historial_Entregas_excel')
+
+    # Ruta del archivo Excel
+    file_path = os.path.join('Historial_Entregas_excel', 'historial_Entregas.xlsx')
+
+    # Crea un nuevo libro de Excel
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+
+    # Escribir los encabezados
+    sheet.append(['Nombre', 'Cantidad', 'Destinatario', 'Fecha'])
+
+    # Escribir los datos del historial en el libro de Excel
+    for entrega in historial:
+        sheet.append([entrega['Nombre'], entrega['Cantidad'], entrega['Destinatario'], entrega['Fecha']])
+
+    # Guardar el libro de Excel en la carpeta específica
+    workbook.save(file_path)
+
+    return file_path
 
 def mostrar_historial_nueva_ventana(filtro_producto=None):
     historial = cargar_historial()
@@ -263,7 +315,7 @@ def mostrar_historial_nueva_ventana(filtro_producto=None):
                 [sg.Text("Historial de Entregas:")],
                 [sg.Multiline("\n".join([f"{entrega['Nombre']} - Cantidad: {entrega['Cantidad']}, Destinatario: {entrega['Destinatario']}, Fecha: {entrega['Fecha']}" for entrega in historial_filtrado]), size=(120, 20), key='-HISTORIAL-')],
                 [sg.Text(size=(40, 5), key='-OUTPUT-')],
-                [sg.Button("Copiar"), sg.Button("Cerrar", button_color=('white', 'red'))]
+                [sg.Button("Copiar"),sg.Button("EXCEL") ,sg.Button("Cerrar", button_color=('white', 'red'))]
             ]
 
             window_historial = sg.Window("Historial de Entregas", layout)
@@ -278,6 +330,10 @@ def mostrar_historial_nueva_ventana(filtro_producto=None):
                 if event_historial == "Copiar":
                     sg.popup("¡Datos copiados al portapapeles!")
                     sg.clipboard_set("\n".join([f"{entrega['Nombre']} - Cantidad: {entrega['Cantidad']}, Destinatario: {entrega['Destinatario']}, Fecha: {entrega['Fecha']}" for entrega in historial_filtrado]))
+
+                if event_historial == "EXCEL":
+                    file_path = guardar_en_excel(historial_filtrado)
+                    sg.popup(f"Archivo guardado en {file_path}")
 
 
 def mostrar_stock(window):
