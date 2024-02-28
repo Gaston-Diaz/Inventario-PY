@@ -215,7 +215,7 @@ def guardar_en_excel_1(base_datos):
         sheet.append([insumo, cantidad])
 
     # Crear la carpeta si no existe
-    folder_path = 'Stock_excel'
+    folder_path = 'Archivos_excel'
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
@@ -275,11 +275,11 @@ def mostrar_stock_nueva_ventana(filtro_producto=None):
 
 def guardar_en_excel(historial):
     # Crear una carpeta si no existe
-    if not os.path.exists('Historial_Entregas_excel'):
-        os.makedirs('Historial_Entregas_excel')
+    if not os.path.exists('Archivos_excel'):
+        os.makedirs('Archivos_excel')
 
     # Ruta del archivo Excel
-    file_path = os.path.join('Historial_Entregas_excel', 'historial_Entregas.xlsx')
+    file_path = os.path.join('Archivos_excel', 'historial_Entregas.xlsx')
 
     # Crea un nuevo libro de Excel
     workbook = openpyxl.Workbook()
